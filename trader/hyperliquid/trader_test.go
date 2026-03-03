@@ -8,11 +8,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"nofx/trader/testutil"
+	"nofx/trader/types"
+
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/sonirico/go-hyperliquid"
 	"github.com/stretchr/testify/assert"
-	"nofx/trader/testutil"
-	"nofx/trader/types"
 )
 
 // ============================================================
@@ -23,8 +24,8 @@ import (
 // Inherits TraderTestSuite and adds Hyperliquid-specific mock logic
 type HyperliquidTestSuite struct {
 	*testutil.TraderTestSuite // Embeds base test suite
-	mockServer              *httptest.Server
-	privateKey              *ecdsa.PrivateKey
+	mockServer                *httptest.Server
+	privateKey                *ecdsa.PrivateKey
 }
 
 // NewHyperliquidTestSuite Create Hyperliquid test suite
@@ -283,7 +284,7 @@ func TestNewHyperliquidTrader(t *testing.T) {
 			walletAddr:    "0x1234567890123456789012345678901234567890",
 			testnet:       true,
 			wantError:     true,
-			errorContains: "Failed to parse private key",
+			errorContains: "failed to parse private key",
 		},
 		{
 			name:          "Empty wallet address",
@@ -297,7 +298,7 @@ func TestNewHyperliquidTrader(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			trader, err := NewHyperliquidTrader(tt.privateKeyHex, tt.walletAddr, tt.testnet)
+			trader, err := NewHyperliquidTrader(tt.privateKeyHex, tt.walletAddr, tt.testnet, true)
 
 			if tt.wantError {
 				assert.Error(t, err)
